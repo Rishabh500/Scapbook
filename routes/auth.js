@@ -13,6 +13,7 @@ function(req, res) {
 
 router.get('/go',(req,res)=>{
   res.send('Go');
+  console.log('test');
 });
 
 module.exports = router;
