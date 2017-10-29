@@ -4,12 +4,14 @@
   "description": "App to create scarp book",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"   
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.2",
-    "mongoose": "^4.12.4"
+    "mongoose": "^4.12.4",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^1.0.0"
   }
 }
