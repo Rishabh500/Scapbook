@@ -11,4 +11,8 @@ function(req, res) {
   res.redirect('/dashboard');
 });
 
+router.get('/go',(req,res)=>{
+  res.send('Go');
+});
+
 module.exports = router;
