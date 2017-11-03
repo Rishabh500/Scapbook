@@ -1,5 +1,7 @@
 const express = require('express');
+const path = require('path');
 const exphbs  = require('express-handlebars');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -7,6 +9,7 @@ const passport = require('passport');
 
 //Load User Model
 require('./models/User');
+require('./models/Story');
 
 //Passport Config
 require('./config/passport')(passport);
@@ -19,17 +22,31 @@ const stories = require('./routes/stories');
 //Load Keys
 const keys = require('./config/keys');
 
+//Handlebars Helpers
+const{
+  truncate,
+  stripTags
+} = require('./helpers/hps.js');
+
 //Mongoose Conneect
 mongoose.connect(keys.mongoURI,{
   useMongoClient:true
 }).then(()=>console.log('Mongo DB connected..')).catch(err=>console.log(err));
 mongoose.Promise = global.Promise;
 
-
 const app = express();
 
+//Body parser Middleware
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
 //Middleware handlebars
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars',exphbs({
+  helpers:{
+    truncate:truncate,
+    stripTags:stripTags
+  },
+  defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 const port = process.env.PORT || 5000;
@@ -50,6 +67,9 @@ app.use((req,res,next)=>{
   res.locals.user = req.user || null;
   next();
 });
+
+//Set static folder
+app.use(express.static(path.join(__dirname,'public')));
 
 //Use Routes
 app.use('/auth',auth);
